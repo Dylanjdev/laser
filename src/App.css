@@ -332,6 +332,39 @@ p {
   align-items: start;
 }
 
+.booking-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.booking-info-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.04);
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+}
+
+.booking-info-card strong {
+  color: var(--text);
+  font-size: 1.02rem;
+}
+
+.booking-info-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.info-label {
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .booking-steps-container {
   display: grid;
   gap: 18px;
@@ -587,6 +620,27 @@ p {
   color: var(--soft);
 }
 
+.calendar-help {
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: var(--r-md);
+  background: rgba(255, 209, 102, 0.08);
+  color: var(--muted);
+  display: grid;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 13px 14px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.calendar-help strong {
+  color: var(--text);
+}
+
+.calendar-help span {
+  color: var(--muted);
+}
+
 .checkout-column {
   position: sticky;
   top: 98px;
@@ -672,6 +726,18 @@ p {
   text-align: center;
 }
 
+.summary-note {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
+  padding: 12px;
+  text-align: center;
+}
+
 .btn-checkout {
   width: 100%;
   font-size: 0.96rem;
@@ -745,21 +811,38 @@ p {
 .pagination-dots {
   bottom: 24px;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   position: absolute;
   right: 24px;
   z-index: 2;
 }
 
 .dot {
-  width: 11px;
-  height: 11px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.34);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
+.dot::before {
+  content: '';
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.38);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dot:hover::before,
 .dot.is-active {
+  background: transparent;
+}
+
+.dot.is-active::before {
   background: var(--cyan);
   transform: scale(1.28);
 }
@@ -862,6 +945,10 @@ p {
   }
 
   .booking-options {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-info-grid {
     grid-template-columns: 1fr;
   }
 

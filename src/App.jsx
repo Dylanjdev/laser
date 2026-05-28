@@ -19,6 +19,8 @@ const STRIPE_LINKS = {
   'mini-golf-laser-tag-combo': import.meta.env.VITE_STRIPE_LINK_COMBO,
 }
 
+const FULL_DAY_BOOKING_TYPES = ['party', 'group', 'private-event']
+
 const BOOKING_OPTIONS = [
   {
     id: 'mini-golf',
@@ -84,6 +86,15 @@ function formatMonth(date) {
   })
 }
 
+function isWeekendOpenPlay(isoDate) {
+  const day = parseIsoDate(isoDate).getDay()
+  return day === 5 || day === 6 || day === 0
+}
+
+function getPartyPrice(isoDate) {
+  return isWeekendOpenPlay(isoDate) ? '$200' : '$150'
+}
+
 export default function App() {
   const today = useMemo(() => new Date(), [])
   const tomorrow = useMemo(() => {
@@ -120,6 +131,7 @@ export default function App() {
 
       const services = [booking.service_type, optionId]
       return (
+        FULL_DAY_BOOKING_TYPES.includes(booking.service_type) ||
         booking.service_type === optionId ||
         services.includes('mini-golf-laser-tag-combo')
       )
@@ -143,6 +155,7 @@ export default function App() {
           weekday: date.toLocaleDateString(undefined, { weekday: 'short' }),
           isPast: isoDate < minBookingDate,
           isBooked: isDateBooked(isoDate),
+          isOpenPlay: isWeekendOpenPlay(isoDate),
         }
       }),
     ]
@@ -188,11 +201,14 @@ export default function App() {
 
   const option = BOOKING_OPTIONS.find(o => o.id === selectedOption)
   const selectedDateIsBooked = isDateBooked(selectedDate)
+  const selectedDateIsOpenPlay = isWeekendOpenPlay(selectedDate)
+  const selectedPartyPrice = getPartyPrice(selectedDate)
+  const selectedDateCanCheckout = selectedDateIsOpenPlay && !selectedDateIsBooked
 
   async function handleCheckout() {
     setCheckoutError('')
 
-    if (!option || selectedDateIsBooked || isCheckingOut) return
+    if (!option || !selectedDateCanCheckout || isCheckingOut) return
     if (!supabase) {
       setCheckoutError('Supabase is not configured yet.')
       return
@@ -257,11 +273,11 @@ export default function App() {
           <div className="hero-copy">
             <div className="hero-badge">
               <span className="status-indicator"></span>
-              Live Availability
+              Friday-Sunday Open Play
             </div>
             <h1>Next-Level <br /><span className="text-gradient">Entertainment.</span></h1>
             <p className="hero-text">
-              Immersive laser tag, glowing mini-golf, and combo passes. Reserve your time instantly online.
+              Mini golf and laser tag open play runs Friday-Sunday from 1-9. Parties and groups of 10+ can book any day.
             </p>
             <div className="hero-actions">
               <a className="btn-primary" href="#booking">Book Experience</a>
@@ -287,6 +303,24 @@ export default function App() {
           <div className="section-intro">
             <span className="eyebrow">Secure Your Spot</span>
             <h2>Online Reservations</h2>
+          </div>
+
+          <div className="booking-info-grid">
+            <div className="booking-info-card">
+              <span className="info-label">Open Play</span>
+              <strong>Friday-Sunday, 1-9</strong>
+              <p>Mini golf, laser tag, and combo checkout are available online during weekend open-play hours.</p>
+            </div>
+            <div className="booking-info-card">
+              <span className="info-label">Groups 10+</span>
+              <strong>Any day, any time</strong>
+              <p>Large groups can request a private booking outside open-play hours.</p>
+            </div>
+            <div className="booking-info-card">
+              <span className="info-label">Parties</span>
+              <strong>$150 weekday / $200 weekend</strong>
+              <p>Includes 3 hours and up to 10 players. Additional players are $5 each.</p>
+            </div>
           </div>
 
           <div className="booking-layout">
@@ -367,11 +401,15 @@ export default function App() {
                         <span className="day-name">{date.weekday}</span>
                         <span className="day-num">{date.dayNumber}</span>
                         <span className="open-tag">
-                          {date.isPast ? 'Past' : date.isBooked ? 'Booked' : 'Open'}
+                          {date.isPast ? 'Past' : date.isBooked ? 'Booked' : date.isOpenPlay ? 'Open' : 'Groups'}
                         </span>
                       </button>
                     )
                   })}
+                </div>
+                <div className="calendar-help">
+                  <strong>Open play checkout is Friday-Sunday from 1-9.</strong>
+                  <span>Monday-Thursday dates are available for parties and groups of 10+ by phone.</span>
                 </div>
               </div>
             </div>
@@ -389,6 +427,10 @@ export default function App() {
                     <span className="row-label">Date</span>
                     <strong className="row-value">{formatDate(selectedDate)}</strong>
                   </div>
+                  <div className="summary-row">
+                    <span className="row-label">Party Rate</span>
+                    <strong className="row-value">{selectedPartyPrice} / 3 hr</strong>
+                  </div>
                   <div className="summary-divider"></div>
                   <div className="summary-row total">
                     <span className="row-label">Total Due</span>
@@ -396,20 +438,33 @@ export default function App() {
                   </div>
                 </div>
                 
-                <div className={`availability-status ${selectedDateIsBooked ? 'status-error' : 'status-success'}`}>
-                  {selectedDateIsBooked ? 'That date is already booked.' : 'Available for booking'}
+                <div className={`availability-status ${selectedDateCanCheckout ? 'status-success' : 'status-error'}`}>
+                  {selectedDateIsBooked
+                    ? 'That date is already booked.'
+                    : selectedDateIsOpenPlay
+                    ? 'Available for open-play checkout.'
+                    : 'Call to book groups or parties on this date.'}
+                </div>
+                <div className="summary-note">
+                  Parties include 3 hours and up to 10 players. Additional players are $5 each.
                 </div>
                 {availabilityError && <div className="form-message">{availabilityError}</div>}
                 {checkoutError && <div className="form-message status-error">{checkoutError}</div>}
 
-                <button
-                  type="button"
-                  className="btn-checkout"
-                  onClick={handleCheckout}
-                  disabled={!option || selectedDateIsBooked || isCheckingOut}
-                >
-                  {isCheckingOut ? 'Starting Checkout...' : 'Proceed to Secure Checkout'}
-                </button>
+                {selectedDateIsOpenPlay || selectedDateIsBooked ? (
+                  <button
+                    type="button"
+                    className="btn-checkout"
+                    onClick={handleCheckout}
+                    disabled={!option || !selectedDateCanCheckout || isCheckingOut}
+                  >
+                    {isCheckingOut ? 'Starting Checkout...' : 'Proceed to Secure Checkout'}
+                  </button>
+                ) : (
+                  <a className="btn-checkout" href="tel:+12763453563">
+                    Call to Book This Date
+                  </a>
+                )}
                 <div className="secure-badge">🔒 Secure payment via Stripe</div>
               </div>
             </div>
@@ -465,7 +520,7 @@ export default function App() {
             <div className="footer-nav">
               <span className="footer-heading">Contact</span>
               <a href="tel:+12763453563" className="footer-link">(276) 345-3563</a>
-              <p>Call for same-day availability</p>
+              <p>Call for parties, groups of 10+, and same-day availability</p>
             </div>
           </div>
           <div className="footer-bottom">
