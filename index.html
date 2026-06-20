@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#07080d" />
     <meta
       name="description"
-      content="Appalachian Asenso is an indoor mini golf and laser tag venue in Pennington Gap, VA with weekend open play, birthday parties, group events, and private bookings."
+      content="Indoor mini golf, laser tag, birthday parties, and group events at Appalachian Asenso in Pennington Gap, VA. Open play Friday-Sunday, 1-9."
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://appalachianasenso.com/" />
@@ -22,7 +22,7 @@
     <meta property="og:title" content="Appalachian Asenso | Mini Golf and Laser Tag in Pennington Gap, VA" />
     <meta
       property="og:description"
-      content="Indoor mini golf, laser tag, combo passes, birthday parties, and private group bookings in Pennington Gap, Virginia."
+      content="Play indoor mini golf and laser tag, plan birthday parties, and reserve group events at Appalachian Asenso in Pennington Gap, Virginia."
     />
     <meta property="og:url" content="https://appalachianasenso.com/" />
     <meta property="og:image" content="https://appalachianasenso.com/bbl.webp" />
@@ -31,78 +31,134 @@
     <meta name="twitter:title" content="Appalachian Asenso | Mini Golf and Laser Tag in Pennington Gap, VA" />
     <meta
       name="twitter:description"
-      content="Indoor mini golf, laser tag, combo passes, birthday parties, and private group bookings in Pennington Gap, Virginia."
+      content="Indoor mini golf, laser tag, birthday parties, and group events in Pennington Gap, Virginia."
     />
     <meta name="twitter:image" content="https://appalachianasenso.com/bbl.webp" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "EntertainmentBusiness",
-        "@id": "https://appalachianasenso.com/#business",
-        "name": "Appalachian Asenso",
-        "url": "https://appalachianasenso.com/",
-        "image": "https://appalachianasenso.com/bbl.webp",
-        "telephone": "+12763453563",
-        "priceRange": "$8-$200",
-        "description": "Indoor mini golf, laser tag, birthday parties, group events, and private bookings in Pennington Gap, Virginia.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "282 Westgate Mall Cir, Ste 104",
-          "addressLocality": "Pennington Gap",
-          "addressRegion": "VA",
-          "postalCode": "24277",
-          "addressCountry": "US"
-        },
-        "areaServed": [
-          "Pennington Gap, VA",
-          "Lee County, VA",
-          "Jonesville, VA",
-          "Big Stone Gap, VA",
-          "Norton, VA"
-        ],
-        "openingHoursSpecification": [
+        "@graph": [
           {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Friday", "Saturday", "Sunday"],
-            "opens": "13:00",
-            "closes": "21:00"
-          }
-        ],
-        "makesOffer": [
-          {
-            "@type": "Offer",
-            "name": "18-hole indoor mini golf",
-            "price": "8",
-            "priceCurrency": "USD"
-          },
-          {
-            "@type": "Offer",
-            "name": "30-minute laser tag session",
-            "price": "10",
-            "priceCurrency": "USD"
-          },
-          {
-            "@type": "Offer",
-            "name": "Mini golf and laser tag combo",
-            "price": "16",
-            "priceCurrency": "USD"
-          },
-          {
-            "@type": "Offer",
-            "name": "Birthday parties and private group events",
-            "priceSpecification": {
-              "@type": "PriceSpecification",
-              "priceCurrency": "USD",
-              "minPrice": "150",
-              "maxPrice": "200"
+            "@type": "EntertainmentBusiness",
+            "@id": "https://appalachianasenso.com/#business",
+            "name": "Appalachian Asenso",
+            "url": "https://appalachianasenso.com/",
+            "image": "https://appalachianasenso.com/bbl.webp",
+            "telephone": "+12763453563",
+            "priceRange": "$8-$200",
+            "description": "Indoor mini golf, laser tag, birthday parties, group events, and private bookings in Pennington Gap, Virginia.",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "282 Westgate Mall Cir, Ste 104",
+              "addressLocality": "Pennington Gap",
+              "addressRegion": "VA",
+              "postalCode": "24277",
+              "addressCountry": "US"
+            },
+            "areaServed": [
+              "Pennington Gap, VA",
+              "Lee County, VA",
+              "Jonesville, VA",
+              "Big Stone Gap, VA",
+              "Norton, VA",
+              "Wise County, VA"
+            ],
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+                "opens": "13:00",
+                "closes": "21:00"
+              }
+            ],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Mini golf, laser tag, parties, and group events",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "name": "18-hole indoor mini golf",
+                  "price": "8",
+                  "priceCurrency": "USD"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "30-minute laser tag session",
+                  "price": "10",
+                  "priceCurrency": "USD"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Mini golf and laser tag combo",
+                  "price": "16",
+                  "priceCurrency": "USD"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Birthday parties and private group events",
+                  "priceSpecification": {
+                    "@type": "PriceSpecification",
+                    "priceCurrency": "USD",
+                    "minPrice": "150",
+                    "maxPrice": "200"
+                  }
+                }
+              ]
             }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://appalachianasenso.com/#website",
+            "url": "https://appalachianasenso.com/",
+            "name": "Appalachian Asenso",
+            "publisher": {
+              "@id": "https://appalachianasenso.com/#business"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://appalachianasenso.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What are Appalachian Asenso open-play hours?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Open play is Friday, Saturday, and Sunday from 1-9 at Westgate Mall in Pennington Gap, Virginia."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much does mini golf or laser tag cost?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Mini golf is $8, a 30-minute laser tag session is $10, and the mini golf plus laser tag combo is $16."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you host birthday parties?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Birthday parties include three hours and up to 10 players. Weekday parties are $150, weekend parties are $200, and additional players are $5 each."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can groups reserve outside open-play hours?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Groups of 10 or more can request private time outside normal open-play hours by calling (276) 345-3563."
+                }
+              }
+            ]
           }
         ]
       }
     </script>
-    <title>Mini Golf and Laser Tag in Pennington Gap, VA | Appalachian Asenso</title>
-    <script type="module" crossorigin src="/assets/index-CyxaSRP8.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Du51jIhD.css">
+    <title>Indoor Mini Golf, Laser Tag and Parties in Pennington Gap, VA | Appalachian Asenso</title>
+    <script type="module" crossorigin src="/assets/index-nfqOatw_.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BRQZNC-b.css">
   </head>
   <body>
     <div id="root"></div>
