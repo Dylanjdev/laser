@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 import './App.css'
 import logo from './assets/lasernobg.png'
 import lasertag1 from './assets/lasertag1.webp'
@@ -7,27 +6,13 @@ import minigolf1 from './assets/minigolf1.webp'
 import minigolf2 from './assets/minigolf2.webp'
 import bdayroom from './assets/bdayroom.webp'
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
-const supabase = SUPABASE_URL && SUPABASE_ANON_KEY
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null
-
-const STRIPE_LINKS = {
-  'mini-golf': import.meta.env.VITE_STRIPE_LINK_MINI_GOLF,
-  'laser-tag': import.meta.env.VITE_STRIPE_LINK_LASER_TAG,
-  'mini-golf-laser-tag-combo': import.meta.env.VITE_STRIPE_LINK_COMBO,
-}
-
-const FULL_DAY_BOOKING_TYPES = ['party', 'group', 'private-event']
-
-const BOOKING_OPTIONS = [
+const EXPERIENCE_OPTIONS = [
   {
     id: 'mini-golf',
     title: 'Mini Golf 18 Holes',
     price: '$8',
     per: '',
-    description: 'Reserve an 18-hole glowing mini golf round.',
+    description: 'Play an 18-hole glowing mini golf round.',
     accent: 'var(--cyan)',
   },
   {
@@ -35,7 +20,7 @@ const BOOKING_OPTIONS = [
     title: 'Laser Tag Session 30 Minutes',
     price: '$10',
     per: '',
-    description: 'Book a 30-minute laser tag session with blacklight targets and team play.',
+    description: 'Play a 30-minute laser tag session with blacklight targets and team play.',
     accent: 'var(--pink)',
   },
   {
@@ -43,212 +28,84 @@ const BOOKING_OPTIONS = [
     title: 'Mini Golf and Laser Tag Combo',
     price: '$16',
     per: '',
-    description: 'Bundle mini golf and a laser tag session into one visit.',
+    description: 'Bundle mini golf and laser tag into one visit.',
     accent: 'var(--gold)',
   },
 ]
 
 const SLIDES = [
-  { src: lasertag1, alt: 'Laser Tag Arena' },
-  { src: minigolf1, alt: 'Mini Golf Hole' },
-  { src: minigolf2, alt: 'Mini Golf Detail' },
-  { src: bdayroom, alt: 'Birthday Party Room' },
+  { src: lasertag1, alt: 'Laser tag arena at Appalachian Asenso in Pennington Gap' },
+  { src: minigolf1, alt: 'Indoor mini golf course at Appalachian Asenso' },
+  { src: minigolf2, alt: 'Blacklight mini golf detail at Appalachian Asenso' },
+  { src: bdayroom, alt: 'Birthday party room at Appalachian Asenso' },
 ]
 
-function toIsoDate(date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
+const ATTRACTIONS = [
+  {
+    title: 'Indoor Mini Golf',
+    copy: 'Play an 18-hole glowing mini golf course built for families, date nights, youth groups, and weekend outings in Pennington Gap.',
+  },
+  {
+    title: 'Laser Tag',
+    copy: 'Play a 30-minute laser tag session with blacklight targets, team play, and an indoor arena that works in any weather.',
+  },
+  {
+    title: 'Birthday Parties',
+    copy: 'Reserve a three-hour party with room time and up to 10 players, with extra players available for larger celebrations.',
+  },
+  {
+    title: 'Group Events',
+    copy: 'Plan church groups, school groups, team parties, company outings, and private events for groups of 10 or more.',
+  },
+]
 
-function parseIsoDate(isoDate) {
-  const [year, month, day] = isoDate.split('-').map(Number)
-  return new Date(year, month - 1, day)
-}
+const SERVICE_AREAS = ['Pennington Gap', 'Lee County', 'Jonesville', 'Big Stone Gap', 'Norton', 'Wise County']
 
-function toMonthValue(date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-}
+const LOCAL_SECTIONS = [
+  {
+    title: 'Laser Tag in Pennington Gap',
+    copy: 'Our indoor laser tag arena gives families, students, church groups, and teams a weather-proof activity close to Lee County. Sessions run 30 minutes and are easy to pair with mini golf for a longer visit.',
+  },
+  {
+    title: 'Indoor Mini Golf Near Lee County',
+    copy: 'The 18-hole glowing mini golf course is built for casual weekend play, date nights, youth outings, and family activities when you want something indoors in Pennington Gap.',
+  },
+  {
+    title: 'Birthday Party Venue',
+    copy: 'Birthday parties include three hours and up to 10 players, with extra players available for larger celebrations. Call to talk through the best time, player count, and party room availability.',
+  },
+  {
+    title: 'Private Groups And Team Events',
+    copy: 'Groups of 10 or more can request private time outside normal open-play hours for school groups, church events, company outings, team parties, and family gatherings.',
+  },
+]
 
-function formatDate(isoDate) {
-  return parseIsoDate(isoDate).toLocaleDateString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-function formatMonth(date) {
-  return date.toLocaleDateString(undefined, {
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-function isWeekendOpenPlay(isoDate) {
-  const day = parseIsoDate(isoDate).getDay()
-  return day === 5 || day === 6 || day === 0
-}
-
-function getPartyPrice(isoDate) {
-  return isWeekendOpenPlay(isoDate) ? '$200' : '$150'
-}
+const FAQ_ITEMS = [
+  {
+    question: 'What are Appalachian Asenso open-play hours?',
+    answer: 'Open play is Friday, Saturday, and Sunday from 1-9 at Westgate Mall in Pennington Gap, Virginia.',
+  },
+  {
+    question: 'How much does mini golf or laser tag cost?',
+    answer: 'Mini golf is $8, a 30-minute laser tag session is $10, and the mini golf plus laser tag combo is $16.',
+  },
+  {
+    question: 'Do you host birthday parties?',
+    answer: 'Yes. Birthday parties include three hours and up to 10 players. Weekday parties are $150, weekend parties are $200, and additional players are $5 each.',
+  },
+  {
+    question: 'Can groups reserve outside open-play hours?',
+    answer: 'Yes. Groups of 10 or more can request private time outside normal open-play hours by calling (276) 345-3563.',
+  },
+]
 
 export default function App() {
-  const today = useMemo(() => new Date(), [])
-  const tomorrow = useMemo(() => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    today.setDate(today.getDate() + 1)
-    return today
-  }, [])
-  const minBookingDate = toIsoDate(tomorrow)
-  const monthOptions = useMemo(() => {
-    const start = new Date(today.getFullYear(), today.getMonth(), 1)
-    return Array.from({ length: 12 }, (_, i) => {
-      const date = new Date(start.getFullYear(), start.getMonth() + i, 1)
-      return {
-        value: toMonthValue(date),
-        label: formatMonth(date),
-        date,
-      }
-    })
-  }, [today])
-
-  const [selectedOption, setSelectedOption] = useState(BOOKING_OPTIONS[0].id)
-  const [selectedMonth, setSelectedMonth] = useState(monthOptions[0].value)
-  const [selectedDate, setSelectedDate] = useState(minBookingDate)
-  const [paidBookings, setPaidBookings] = useState([])
-  const [availabilityError, setAvailabilityError] = useState('')
-  const [checkoutError, setCheckoutError] = useState('')
-  const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [slideIndex, setSlideIndex] = useState(0)
-
-  const isDateBooked = useMemo(() => {
-    return (isoDate, optionId = selectedOption) => paidBookings.some(booking => {
-      if (booking.reserved_date !== isoDate) return false
-
-      const services = [booking.service_type, optionId]
-      return (
-        FULL_DAY_BOOKING_TYPES.includes(booking.service_type) ||
-        booking.service_type === optionId ||
-        services.includes('mini-golf-laser-tag-combo')
-      )
-    })
-  }, [paidBookings, selectedOption])
-
-  const calendarDays = useMemo(() => {
-    const [year, month] = selectedMonth.split('-').map(Number)
-    const firstDay = new Date(year, month - 1, 1)
-    const daysInMonth = new Date(year, month, 0).getDate()
-    const leadingEmptyDays = firstDay.getDay()
-
-    return [
-      ...Array.from({ length: leadingEmptyDays }, () => null),
-      ...Array.from({ length: daysInMonth }, (_, i) => {
-        const date = new Date(year, month - 1, i + 1)
-        const isoDate = toIsoDate(date)
-        return {
-          isoDate,
-          dayNumber: i + 1,
-          weekday: date.toLocaleDateString(undefined, { weekday: 'short' }),
-          isPast: isoDate < minBookingDate,
-          isBooked: isDateBooked(isoDate),
-          isOpenPlay: isWeekendOpenPlay(isoDate),
-        }
-      }),
-    ]
-  }, [isDateBooked, minBookingDate, selectedMonth])
-
-  const selectedMonthLabel = monthOptions.find(month => month.value === selectedMonth)?.label
 
   useEffect(() => {
     const timer = setInterval(() => setSlideIndex(i => (i + 1) % SLIDES.length), 5000)
     return () => clearInterval(timer)
   }, [])
-
-  useEffect(() => {
-    async function loadPaidBookings() {
-      if (!supabase) return
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('reserved_date, service_type')
-        .eq('status', 'paid')
-
-      if (error) {
-        console.error('Availability load failed', error)
-        setAvailabilityError('Availability could not be refreshed.')
-        return
-      }
-
-      setPaidBookings(data ?? [])
-      setAvailabilityError('')
-    }
-
-    loadPaidBookings()
-  }, [])
-
-  function handleMonthChange(event) {
-    const monthValue = event.target.value
-    const [year, month] = monthValue.split('-').map(Number)
-    const firstOfMonth = toIsoDate(new Date(year, month - 1, 1))
-
-    setSelectedMonth(monthValue)
-    setSelectedDate(firstOfMonth < minBookingDate ? minBookingDate : firstOfMonth)
-  }
-
-  const option = BOOKING_OPTIONS.find(o => o.id === selectedOption)
-  const selectedDateIsBooked = isDateBooked(selectedDate)
-  const selectedDateIsOpenPlay = isWeekendOpenPlay(selectedDate)
-  const selectedPartyPrice = getPartyPrice(selectedDate)
-  const selectedDateCanCheckout = selectedDateIsOpenPlay && !selectedDateIsBooked
-
-  async function handleCheckout() {
-    setCheckoutError('')
-
-    if (!option || !selectedDateCanCheckout || isCheckingOut) return
-    if (!supabase) {
-      setCheckoutError('Supabase is not configured yet.')
-      return
-    }
-
-    const stripeLink = STRIPE_LINKS[selectedOption]
-    if (!stripeLink) {
-      setCheckoutError('Stripe checkout link is missing for this experience.')
-      return
-    }
-
-    setIsCheckingOut(true)
-
-    try {
-      const bookingId = crypto.randomUUID()
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          id: bookingId,
-          reserved_date: selectedDate,
-          service_type: selectedOption,
-          status: 'pending',
-        })
-
-      if (error) {
-        console.error('Pending booking creation failed', error)
-        setCheckoutError('Could not start checkout. Please try again.')
-        return
-      }
-
-      const checkoutUrl = new URL(stripeLink)
-      checkoutUrl.searchParams.set('client_reference_id', bookingId)
-      window.location.href = checkoutUrl.toString()
-    } catch (error) {
-      console.error('Checkout error', error)
-      setCheckoutError('Could not start checkout. Please try again.')
-    } finally {
-      setIsCheckingOut(false)
-    }
-  }
 
   return (
     <div className="app-container">
@@ -257,12 +114,17 @@ export default function App() {
         <div className="header-content">
           <div className="logo-brand">
             <img src={logo} alt="Appalachian Asenso" className="nav-logo" />
-            <span className="brand-name">Appalachian Asenso</span>
+            <span className="brand-stack">
+              <span className="brand-name">Appalachian Asenso</span>
+              <span className="brand-location">Pennington Gap, VA</span>
+            </span>
           </div>
           <nav className="desktop-nav">
+            <a href="#attractions">Attractions</a>
+            <a href="#parties">Parties</a>
             <a href="#venue">Venue</a>
             <a href="#contact">Contact</a>
-            <a href="#booking" className="btn-nav-cta">Book Now</a>
+            <a href="tel:+12763453563" className="btn-nav-cta">Call Us</a>
           </nav>
         </div>
       </header>
@@ -275,41 +137,113 @@ export default function App() {
               <span className="status-indicator"></span>
               Friday-Sunday Open Play
             </div>
-            <h1>Next-Level <br /><span className="text-gradient">Entertainment.</span></h1>
+            <h1>Mini Golf and Laser Tag in <span className="text-gradient">Pennington Gap, VA.</span></h1>
             <p className="hero-text">
-              Mini golf and laser tag open play runs Friday-Sunday from 1-9. Parties and groups of 10+ can book any day.
+              Appalachian Asenso is an indoor entertainment venue at Westgate Mall with 18-hole mini golf,
+              30-minute laser tag sessions, combo passes, birthday parties, and private group bookings.
             </p>
             <div className="hero-actions">
-              <a className="btn-primary" href="#booking">Book Experience</a>
+              <a className="btn-primary" href="tel:+12763453563">Call to Plan a Visit</a>
               <a className="btn-secondary" href="#venue">View Gallery</a>
             </div>
             <div className="hero-trust">
               <div className="trust-item">
-                <span className="trust-icon">⭐</span> 5.0 Rated Venue
+                <span className="trust-kicker">Rated</span>
+                <strong>5.0 Venue</strong>
               </div>
               <div className="trust-item">
-                <span className="trust-icon">📍</span> Westgate Mall, Ste 104
+                <span className="trust-kicker">Located</span>
+                <strong>Westgate Mall, Ste 104</strong>
+              </div>
+              <div className="trust-item">
+                <span className="trust-kicker">Call</span>
+                <strong>(276) 345-3563</strong>
               </div>
             </div>
           </div>
           <div className="hero-visual">
             <div className="visual-glow"></div>
-            <img src={lasertag1} alt="Laser Tag Arena" className="hero-main-img" />
+            <img
+              src={lasertag1}
+              alt="Indoor laser tag arena at Appalachian Asenso in Pennington Gap, Virginia"
+              className="hero-main-img"
+              fetchPriority="high"
+            />
           </div>
         </section>
 
-        {/* ── BOOKING ── */}
-        <section id="booking" className="booking-panel">
+        {/* ── ATTRACTIONS ── */}
+        <section id="attractions" className="attractions-section" aria-labelledby="attractions-title">
           <div className="section-intro">
-            <span className="eyebrow">Secure Your Spot</span>
-            <h2>Online Reservations</h2>
+            <span className="eyebrow">Things To Do</span>
+            <h2 id="attractions-title">Indoor fun for families, parties, and groups</h2>
+            <p>
+              Visit Appalachian Asenso for mini golf, laser tag, and private events in Pennington Gap.
+              Weekend open play is available Friday-Sunday from 1-9, and parties or groups of 10+
+              can reserve outside open-play hours by phone.
+            </p>
+          </div>
+          <div className="attraction-grid">
+            {ATTRACTIONS.map(attraction => (
+              <article className="attraction-card" key={attraction.title}>
+                <h3>{attraction.title}</h3>
+                <p>{attraction.copy}</p>
+              </article>
+            ))}
+          </div>
+          <div className="local-service-panel">
+            <div>
+              <span className="eyebrow">Serving Southwest Virginia</span>
+              <h3>Entertainment near Lee County, VA</h3>
+              <p>
+                Appalachian Asenso is located in Westgate Mall in Pennington Gap, making it a convenient
+                indoor activity for families, birthday parties, school groups, church groups, and team events
+                across far Southwest Virginia.
+              </p>
+            </div>
+            <ul className="service-area-list" aria-label="Nearby service areas">
+              {SERVICE_AREAS.map(area => <li key={area}>{area}</li>)}
+            </ul>
+          </div>
+        </section>
+
+        {/* ── LOCAL SEARCH CONTENT ── */}
+        <section id="parties" className="local-search-section" aria-labelledby="local-search-title">
+          <div className="section-intro">
+            <span className="eyebrow">Laser Tag, Mini Golf, Parties</span>
+            <h2 id="local-search-title">A local indoor entertainment spot for Southwest Virginia</h2>
+            <p>
+              Appalachian Asenso gives Pennington Gap, Lee County, Jonesville, Big Stone Gap, Norton,
+              and nearby Southwest Virginia families a place for indoor mini golf, laser tag,
+              birthday parties, and private group events.
+            </p>
+          </div>
+          <div className="local-search-grid">
+            {LOCAL_SECTIONS.map(section => (
+              <article className="local-search-card" key={section.title}>
+                <h3>{section.title}</h3>
+                <p>{section.copy}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ── PRICING ── */}
+        <section id="pricing" className="booking-panel">
+          <div className="section-intro">
+            <span className="eyebrow">Pricing And Reservations</span>
+            <h2>Mini golf, laser tag, parties, and groups</h2>
+            <p>
+              Weekend open play is available Friday-Sunday from 1-9. For birthday parties,
+              groups of 10+, private events, or same-day availability, call the venue directly.
+            </p>
           </div>
 
           <div className="booking-info-grid">
             <div className="booking-info-card">
               <span className="info-label">Open Play</span>
               <strong>Friday-Sunday, 1-9</strong>
-              <p>Mini golf, laser tag, and combo checkout are available online during weekend open-play hours.</p>
+              <p>Mini golf, laser tag, and combo passes are available during weekend open-play hours.</p>
             </div>
             <div className="booking-info-card">
               <span className="info-label">Groups 10+</span>
@@ -323,151 +257,56 @@ export default function App() {
             </div>
           </div>
 
-          <div className="booking-layout">
-            <div className="booking-steps-container">
-              
-              {/* STEP 1 */}
-              <div className="booking-step">
-                <div className="step-header">
-                  <span className="step-number">1</span>
-                  <h3>Select Experience</h3>
-                </div>
-                <div className="booking-options">
-                  {BOOKING_OPTIONS.map(item => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`service-card ${item.id === selectedOption ? 'is-active' : ''}`}
-                      onClick={() => setSelectedOption(item.id)}
-                      style={{ '--card-accent': item.accent }}
-                    >
-                      <div className="card-header">
-                        <span className="service-title">{item.title}</span>
-                        <div className="service-price">
-                          <span className="amount">{item.price}</span>
-                          <span className="duration">{item.per}</span>
-                        </div>
-                      </div>
-                      <p className="service-desc">{item.description}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* STEP 2 */}
-              <div className="booking-step">
-                <div className="step-header">
-                  <span className="step-number">2</span>
-                  <div>
-                    <h3>Choose Date</h3>
-                    <p className="step-note">{selectedMonthLabel} availability</p>
-                  </div>
-                </div>
-                <div className="calendar-toolbar">
-                  <label className="month-select-label" htmlFor="booking-month">Month</label>
-                  <select
-                    id="booking-month"
-                    className="month-select"
-                    value={selectedMonth}
-                    onChange={handleMonthChange}
-                  >
-                    {monthOptions.map(month => (
-                      <option key={month.value} value={month.value}>
-                        {month.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="calendar-weekdays" aria-hidden="true">
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                    <span key={day}>{day}</span>
-                  ))}
-                </div>
-                <div className="date-selection-grid">
-                  {calendarDays.map((date, index) => {
-                    if (!date) {
-                      return <span key={`empty-${index}`} className="date-cell date-cell-empty" />
-                    }
-
-                    const isSelected = date.isoDate === selectedDate
-                    return (
-                      <button
-                        key={date.isoDate}
-                        type="button"
-                        className={`date-cell ${isSelected ? 'is-selected' : ''}`}
-                        disabled={date.isPast || date.isBooked}
-                        onClick={() => setSelectedDate(date.isoDate)}
-                      >
-                        <span className="day-name">{date.weekday}</span>
-                        <span className="day-num">{date.dayNumber}</span>
-                        <span className="open-tag">
-                          {date.isPast ? 'Past' : date.isBooked ? 'Booked' : date.isOpenPlay ? 'Open' : 'Groups'}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-                <div className="calendar-help">
-                  <strong>Open play checkout is Friday-Sunday from 1-9.</strong>
-                  <span>Monday-Thursday dates are available for parties and groups of 10+ by phone.</span>
-                </div>
-              </div>
+          <div className="booking-step">
+            <div className="step-header">
+              <h3>Experience Prices</h3>
             </div>
-
-            {/* CHECKOUT SIDEBAR */}
-            <div className="checkout-column">
-              <div className="reservation-summary">
-                <h3 className="summary-title">Reservation Summary</h3>
-                <div className="summary-box">
-                  <div className="summary-row">
-                    <span className="row-label">Experience</span>
-                    <strong className="row-value">{option?.title}</strong>
+            <div className="booking-options">
+              {EXPERIENCE_OPTIONS.map(item => (
+                <article
+                  key={item.id}
+                  className="service-card"
+                  style={{ '--card-accent': item.accent }}
+                >
+                  <div className="card-header">
+                    <span className="service-title">{item.title}</span>
+                    <div className="service-price">
+                      <span className="amount">{item.price}</span>
+                      <span className="duration">{item.per}</span>
+                    </div>
                   </div>
-                  <div className="summary-row">
-                    <span className="row-label">Date</span>
-                    <strong className="row-value">{formatDate(selectedDate)}</strong>
-                  </div>
-                  <div className="summary-row">
-                    <span className="row-label">Party Rate</span>
-                    <strong className="row-value">{selectedPartyPrice} / 3 hr</strong>
-                  </div>
-                  <div className="summary-divider"></div>
-                  <div className="summary-row total">
-                    <span className="row-label">Total Due</span>
-                    <strong className="row-value amount-large">{option?.price}</strong>
-                  </div>
-                </div>
-                
-                <div className={`availability-status ${selectedDateCanCheckout ? 'status-success' : 'status-error'}`}>
-                  {selectedDateIsBooked
-                    ? 'That date is already booked.'
-                    : selectedDateIsOpenPlay
-                    ? 'Available for open-play checkout.'
-                    : 'Call to book groups or parties on this date.'}
-                </div>
-                <div className="summary-note">
-                  Parties include 3 hours and up to 10 players. Additional players are $5 each.
-                </div>
-                {availabilityError && <div className="form-message">{availabilityError}</div>}
-                {checkoutError && <div className="form-message status-error">{checkoutError}</div>}
-
-                {selectedDateIsOpenPlay || selectedDateIsBooked ? (
-                  <button
-                    type="button"
-                    className="btn-checkout"
-                    onClick={handleCheckout}
-                    disabled={!option || !selectedDateCanCheckout || isCheckingOut}
-                  >
-                    {isCheckingOut ? 'Starting Checkout...' : 'Proceed to Secure Checkout'}
-                  </button>
-                ) : (
-                  <a className="btn-checkout" href="tel:+12763453563">
-                    Call to Book This Date
-                  </a>
-                )}
-                <div className="secure-badge">🔒 Secure payment via Stripe</div>
-              </div>
+                  <p className="service-desc">{item.description}</p>
+                </article>
+              ))}
             </div>
+          </div>
+
+          <div className="reservation-callout">
+            <div>
+              <span className="info-label">Reservations By Phone</span>
+              <h3>Call for parties, groups, private events, and availability</h3>
+              <p>
+                Parties include 3 hours and up to 10 players. Additional players are $5 each.
+                Weekday parties are $150 and weekend parties are $200.
+              </p>
+            </div>
+            <a className="btn-call" href="tel:+12763453563">(276) 345-3563</a>
+          </div>
+        </section>
+
+        {/* ── FAQ ── */}
+        <section className="faq-section" aria-labelledby="faq-title">
+          <div className="section-intro">
+            <span className="eyebrow">Plan Your Visit</span>
+            <h2 id="faq-title">Common questions</h2>
+          </div>
+          <div className="faq-list">
+            {FAQ_ITEMS.map(item => (
+              <article className="faq-item" key={item.question}>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -475,7 +314,11 @@ export default function App() {
         <section id="venue" className="slideshow-section">
           <div className="section-intro">
             <span className="eyebrow">The Venue</span>
-            <h2>Premium Facilities</h2>
+            <h2>Appalachian Asenso at Westgate Mall</h2>
+            <p>
+              Explore the indoor laser tag arena, glowing mini golf course, and birthday party room before
+              planning your visit to 282 Westgate Mall Cir, Ste 104 in Pennington Gap.
+            </p>
           </div>
           <div className="slideshow-container">
             {SLIDES.map(({ src, alt }, i) => (
@@ -510,8 +353,8 @@ export default function App() {
         <div className="footer-content">
           <div className="footer-grid">
             <div className="footer-brand">
-              <img src={logo} alt="Logo" className="footer-logo" />
-              <p>The premier entertainment destination in Pennington Gap.</p>
+              <img src={logo} alt="Appalachian Asenso logo" className="footer-logo" />
+              <p>Indoor mini golf, laser tag, birthday parties, and group events in Pennington Gap, Virginia.</p>
             </div>
             <div className="footer-nav">
               <span className="footer-heading">Location</span>
@@ -521,6 +364,10 @@ export default function App() {
               <span className="footer-heading">Contact</span>
               <a href="tel:+12763453563" className="footer-link">(276) 345-3563</a>
               <p>Call for parties, groups of 10+, and same-day availability</p>
+            </div>
+            <div className="footer-nav">
+              <span className="footer-heading">Hours</span>
+              <p>Open play Friday-Sunday, 1-9<br/>Private bookings available by request</p>
             </div>
           </div>
           <div className="footer-bottom">
