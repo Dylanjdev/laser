@@ -3,6 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Restore clean routes forwarded through public/404.html on GitHub Pages.
+      (function restoreGitHubPagesRoute(location) {
+        if (location.search.charAt(1) !== '/') return
+
+        var route = location.search.slice(1).split('&').map(function decodeRoutePart(part) {
+          return part.replace(/~and~/g, '&')
+        })
+
+        window.history.replaceState(
+          null,
+          '',
+          location.pathname.slice(0, -1) + route[0] +
+            (route[1] ? '?' + route.slice(1).join('&') : '') +
+            location.hash
+        )
+      }(window.location))
+    </script>
     <meta name="theme-color" content="#07080d" />
     <meta
       name="description"
@@ -170,8 +188,8 @@
       }
     </script>
     <title>Indoor Mini Golf, Laser Tag and Parties in Pennington Gap, VA | Appalachian Asenso</title>
-    <script type="module" crossorigin src="/assets/index-DvWvyY6p.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DTVZrcYb.css">
+    <script type="module" crossorigin src="/assets/index-r8vZs3e8.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-7LQzNB6a.css">
   </head>
   <body>
     <div id="root"></div>
