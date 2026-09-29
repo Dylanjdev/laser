@@ -1,19 +1,28 @@
-# React + Vite
+# Appalachian Asenso website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React and Vite site for [appalachianasenso.com](https://appalachianasenso.com/).
 
-Currently, two official plugins are available:
+## Local setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-## React Compiler
+## Party form, Google reviews, and venue video
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The page is ready for optional environment-specific settings in `.env.local`:
 
-## Expanding the ESLint configuration
+- `VITE_FORMSPREE_ENDPOINT`: optionally override the configured Formspree endpoint for another environment.
+- `VITE_VENUE_VIDEO_URL`: optionally override the included `src/assets/laser.mp4` venue video with another public MP4 URL.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# laser
+The reviews section uses curated five-star Google reviews stored in `src/App.jsx`, so it has no third-party widget, API key, or billing dependency.
 
-https://appalachianasenso.com/
+Restart the Vite server after changing environment variables. Run `npm run build` before deployment.
+
+## Routes and GitHub Pages
+
+The site uses clean client-side routes for `/attractions`, `/parties`, `/venue`, `/blog`, and `/faq`.
+`public/404.html` and the early redirect-restoration script in `index.html` provide the GitHub Pages
+SPA fallback, so direct links and browser refreshes continue to work after `npm run deploy`.

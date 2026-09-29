@@ -7,7 +7,9 @@
     "dev": "vite",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist -r git@github.com:Dylanjdev/laser.git",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:ssr && node scripts/prerender.mjs",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.jsx --outDir .prerender",
     "lint": "eslint .",
     "preview": "vite preview"
   },

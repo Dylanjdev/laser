@@ -3,10 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/src/assets/lasertag1.webp" fetchpriority="high" />
+    <!-- APP_STYLES -->
+    <!-- Google tag (gtag.js) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5S40HJ469V');
+
+      (function loadGoogleTagAfterPageLoad() {
+        function loadGoogleTag() {
+          var script = document.createElement('script')
+          script.async = true
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-5S40HJ469V'
+          document.head.appendChild(script)
+        }
+
+        function scheduleGoogleTag() {
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadGoogleTag, { timeout: 2000 })
+          } else {
+            window.setTimeout(loadGoogleTag, 1000)
+          }
+        }
+
+        if (document.readyState === 'complete') {
+          scheduleGoogleTag()
+        } else {
+          window.addEventListener('load', scheduleGoogleTag, { once: true })
+        }
+      }())
+    </script>
+    <script>
+      // Restore clean routes forwarded through public/404.html on GitHub Pages.
+      (function restoreGitHubPagesRoute(location) {
+        if (location.search.charAt(1) !== '/') return
+
+        var route = location.search.slice(1).split('&').map(function decodeRoutePart(part) {
+          return part.replace(/~and~/g, '&')
+        })
+
+        window.history.replaceState(
+          null,
+          '',
+          location.pathname.slice(0, -1) + route[0] +
+            (route[1] ? '?' + route.slice(1).join('&') : '') +
+            location.hash
+        )
+      }(window.location))
+    </script>
     <meta name="theme-color" content="#07080d" />
     <meta
       name="description"
-      content="Indoor mini golf, laser tag, birthday parties, and group events at Appalachian Asenso in Pennington Gap, VA. Open play Friday-Sunday, 1-9."
+      content="Indoor mini golf, laser tag, birthday parties, and group events at Appalachian Asenso in Pennington Gap, VA. Open Thursday and Friday 3-8, Saturday and Sunday 1-8. Closed Monday-Wednesday."
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://appalachianasenso.com/" />
@@ -47,6 +98,13 @@
             "telephone": "+12763453563",
             "priceRange": "$8-$200",
             "description": "Indoor mini golf, laser tag, birthday parties, group events, and private bookings in Pennington Gap, Virginia.",
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": 5,
+              "reviewCount": 13,
+              "bestRating": 5,
+              "worstRating": 1
+            },
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "282 Westgate Mall Cir, Ste 104",
@@ -66,9 +124,15 @@
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+                "dayOfWeek": ["Thursday", "Friday"],
+                "opens": "15:00",
+                "closes": "20:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Saturday", "Sunday"],
                 "opens": "13:00",
-                "closes": "21:00"
+                "closes": "20:00"
               }
             ],
             "hasOfferCatalog": {
@@ -124,7 +188,7 @@
                 "name": "What are Appalachian Asenso open-play hours?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Open play is Friday, Saturday, and Sunday from 1-9 at Westgate Mall in Pennington Gap, Virginia."
+                  "text": "Open play is Thursday and Friday from 3-8, and Saturday and Sunday from 1-8 at Westgate Mall in Pennington Gap, Virginia. We are closed Monday through Wednesday."
                 }
               },
               {
@@ -148,7 +212,7 @@
                 "name": "Can groups reserve outside open-play hours?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. Groups of 10 or more can request private time outside normal open-play hours by calling (276) 345-3563."
+                  "text": "Yes. Groups of 10 or more can request private time outside normal open-play hours using the party booking request form."
                 }
               }
             ]
@@ -167,9 +231,9 @@
           Appalachian Asenso offers indoor mini golf, laser tag, combo passes, birthday parties,
           group events, and private bookings at 282 Westgate Mall Cir, Ste 104, Pennington Gap, VA 24277.
         </p>
-        <p>Call (276) 345-3563 for parties, groups of 10+, and same-day availability.</p>
+        <p>Call (276) 345-3563 with venue questions or for same-day availability.</p>
       </main>
     </noscript>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" fetchpriority="low"></script>
   </body>
 </html>
